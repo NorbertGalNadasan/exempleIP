@@ -14,6 +14,10 @@ const int ecgPin = 36; // gpio36 / adc0
 const int loMinus = 39;// gpio39
 const int loPlus = 34;// gpio34
 
+String ecgData = "";
+int ecgReadCount = 0;
+
+
 MAX30105 particleSensor;
 
 void setup() 
@@ -23,6 +27,8 @@ void setup()
 // leads off
  pinMode(loMinus, INPUT);
  pinMode(loPlus, INPUT);
+ ecgData.reserve(5000); 
+
 
  Serial.println(F("DHTxx test!"));
  dht.begin();
@@ -79,8 +85,15 @@ if((digitalRead(loMinus) == 1)||(digitalRead(loPlus) == 1))
  }
 else
 {
-// send the value of analog input 0:
-    Serial.println(analogRead(ecgPin));
+  if (ecgReadCount < 5000) {
+    ecgData += String(analogRead(ecgPin)) + ",";
+    ecgReadCount++;
+  } 
+  else {
+    Serial.println(ecgData);
+    ecgData = "";
+    ecgReadCount = 0;
+  }
 }
 //Wait for a bit to keep serial data from saturating
 delay(1);
