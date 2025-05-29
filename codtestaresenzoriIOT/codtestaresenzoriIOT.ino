@@ -89,7 +89,14 @@ else
     ecgData += String(analogRead(ecgPin)) + ",";
     ecgReadCount++;
   } 
-  else {
+  else 
+  {
+      if (ecgData.endsWith(",")) 
+      { 
+        ecgData.remove(ecgData.length() - 1);
+
+      }
+
     Serial.println(ecgData);
     ecgData = "";
     ecgReadCount = 0;
